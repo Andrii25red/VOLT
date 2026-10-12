@@ -29,3 +29,20 @@ body {
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; border: none; background: none; cursor: pointer; }
+
+  .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.logo { display: inline-flex; align-items: center; gap: 12px; }
+.logo__icon {
+  width: 52px; height: 52px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+  display: grid; place-items: center;
+}
+.logo__icon svg { width: 24px; height: 24px; }
+.logo__text { font-weight: 700; font-size: 20px; letter-spacing: .02em; }
