@@ -1,40 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-    <link rel="stylesheet" href="style.css">
-    <title>Енергія технологій</title>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLT — Енергія технологій</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-    <body>
-        <header class="header">
-            <div class="container header__top">
-                <a href="" class="logo">
-                    <span class="logo__icon">
+<body>
+
+  <header class="header">
+    <div class="container header__top">
+      <a href="#" class="logo" aria-label="VOLT — на головну">
+        <span class="logo__icon">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2 5 13.5h6L10 22l9-12h-6.2L13.5 2z"/></svg>
         </span>
         <span class="logo__text">VOLT</span>
-                </a>
-                <p class="header__title">Енергія технологій</p>
-                <button class="card-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      </a>
+
+      <p class="header__title">Енергія технологій</p>
+
+      <button class="cart-btn" id="cartBtn" aria-label="Кошик">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 4h2l2.4 10.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.76L20 8H6.2"/>
           <circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/>
         </svg>
-        <span class="cart-count" id="cartCount" hidden>0</span></button>
+        <span class="cart-count" id="cartCount" hidden>0</span>
+      </button>
+    </div>
 
-            </div>
-            <nav class="container nav">
-                <a href="#catalog">Електроніка</a>
-                <a href="#about">Про нас</a>
-                <a href="#contacts">Контакти</a>
-            </nav>
-        </header>
-            <main class="catalog">
-                <div class="container">
-                    <div class="catalog__head">
-                        <div>
-                            <p class="eyebrow">Каталог/24 товари</p>
-                            <h1 class="catalog__title">Добірна техніка, що робить кожен день швидшим, простішим і цікавішим.</h1>
-                        </div>
-                        <div class="filters" id="filters">
+    <nav class="container nav">
+      <a href="#catalog">Електроніка</a>
+      <a href="#about">Про нас</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+  </header>
+
+  <main class="catalog" id="catalog">
+    <div class="container">
+
+      <div class="catalog__head">
+        <div>
+          <p class="eyebrow">Каталог / <span id="count">24 товари</span></p>
+          <h1 class="catalog__title">Електроніка</h1>
+        </div>
+        <p class="catalog__lead">
+          Добірна техніка, що робить кожен день швидшим, простішим і цікавішим.
+        </p>
+      </div>
+
+      <div class="filters" id="filters">
         <button class="chip chip--active" data-filter="all">Усі</button>
         <button class="chip" data-filter="audio">Аудіо</button>
         <button class="chip" data-filter="cameras">Камери</button>
@@ -45,57 +62,64 @@
         <button class="chip" data-filter="games">Ігри</button>
         <button class="chip" data-filter="accessories">Аксесуари</button>
       </div>
-      <div class="grid">
 
+      <div class="grid" id="grid">    
       </div>
-                    </div>
-                </div>
 
-            </main>
-            <div class="about">
-                <div class="container about__inner">
-                    <div>
-                        <p class="eyebrow">Про нас</p>
-                        <h2 class="section-title">Техніка яку б ми обирали для себе</h2>
-                    </div>
-                    <div class="about__text">
-                        <p>VOLT — магазин електроніки, де немає випадкових товарів. Ми самі тестуємо кожну модель і залишаємо в каталозі лише те, що справді варте ваших грошей.</p>
-                        <ul class="facts">
-                            <li><b>14 днів</b><span>на повернення без питань</span></li>
-                            <li><b>1–2 дні</b><span>доставка по Україні</span></li>
-                            <li><b>12 міс.</b><span>гарантії на всю техніку</span></li>
-                        </ul>
+    </div>
+  </main>
 
-                    </div>
-                </div>
-            </div>
-                <footer class="footer">
-                    <div class="container footer__inner">
-                        <div>
-                            <a href="" class="logo logo--light">
-                                <span class="logo__icon">
+  <section class="about" id="about">
+    <div class="container about__inner">
+      <div>
+        <p class="eyebrow">Про нас</p>
+        <h2 class="section-title">Техніка, яку ми обрали б для себе</h2>
+      </div>
+      <div class="about__text">
+        <p>
+          VOLT — магазин електроніки, де немає випадкових товарів. Ми самі
+          тестуємо кожну модель і залишаємо в каталозі лише те, що справді
+          варте ваших грошей.
+        </p>
+        <ul class="facts">
+          <li><b>14 днів</b><span>на повернення без питань</span></li>
+          <li><b>1–2 дні</b><span>доставка по Україні</span></li>
+          <li><b>12 міс.</b><span>гарантії на всю техніку</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="contacts">
+    <div class="container footer__inner">
+      <div>
+        <a href="#" class="logo logo--light">
+          <span class="logo__icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2 5 13.5h6L10 22l9-12h-6.2L13.5 2z"/></svg>
           </span>
           <span class="logo__text">VOLT</span>
-                            </a>
-                            <p class="tagline">Енергія технологій</p>
-                        </div>
-                        <div class="footer__cols">
-                            <div class="footer__col">
-                                <h4>Контакти</h4>
-                                <a href="">+380 56 431 00 35</a>
-                                <a href="">voltua@gmail.com</a>
-                            </div>
-                            <div class="footer__col">
-                                <h4>Графік</h4>
-                                <span>Пн–Пт: 9:00–20:00</span>
-                                <span>Сб–Нд: 10:00–18:00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container footer__bottom">Всі права захищено</div>
-                </footer>
-                <div class="toast"></div>
-                <script src="script.js"></script>
-    </body>
+        </a>
+        <p class="footer__tagline">Енергія технологій.</p>
+      </div>
+
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Контакти</h4>
+          <a href="tel:+380000000000">+380 00 000 00 00</a>
+          <a href="mailto:hello@volt.ua">hello@volt.ua</a>
+        </div>
+        <div class="footer__col">
+          <h4>Графік</h4>
+          <span>Пн–Пт: 9:00–20:00</span>
+          <span>Сб–Нд: 10:00–18:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="container footer__bottom">© 2026 VOLT. Усі права захищено.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
 </html>
