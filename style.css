@@ -1,0 +1,31 @@
+:root {
+  --bg: #d5ebf8;
+  --navy: #14304a;
+  --navy-hover: #1e4466;
+  --text: #14304a;
+  --muted: #4f6a80;
+  --line: #a9c3d4;
+  --chip: #c2e5d4;
+  --chip-border: #9fcfb8;
+  --card-top: #f4f9fc;
+  --card-media: #d6e4d2;
+  --card-border: #b9d3e2;
+
+  --sans: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; border: none; background: none; cursor: pointer; }
