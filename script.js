@@ -46,6 +46,7 @@ const ICONS = {
   accessories: '<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M10 9.5L8 12h3l-2 2.5"/>',
 };
 
+
 const $ = id => document.getElementById(id);
 const formatPrice = n => n.toLocaleString('uk-UA') + ' ₴';
 
@@ -90,7 +91,6 @@ function renderCards(filter = 'all') {
     </article>`).join('');
 }
 
-
 $('filters').addEventListener('click', e => {
   const chip = e.target.closest('[data-filter]');
   if (!chip) return;
@@ -120,6 +120,148 @@ function showToast(text) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+function cartEntries() {
+  const cart = loadCart();
+  return Object.keys(cart)
+    .map(id => ({ id, product: PRODUCTS[id], qty: cart[id] }))
+    .filter(item => item.product && item.qty > 0);
+}
+
+function cartTotals() {
+  const items = cartEntries();
+  const count = items.reduce((s, i) => s + i.qty, 0);
+  const sum = items.reduce((s, i) => s + i.product.price * i.qty, 0);
+  return { items, count, sum };
+}
+
+function setQty(id, qty) {
+  const cart = loadCart();
+  if (qty <= 0) delete cart[id];
+  else cart[id] = qty;
+  saveCart(cart);
+  updateCartCount();
+  renderCart();
+}
+
+function productThumb(p) {
+  return `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${ICONS[p.cat]}</svg>
+    <img src="images/${p.img}" alt="" onerror="this.remove()">`;
+}
+
+let cartScreen = 'list';
+
+function renderCart() {
+  const body = $('cartBody');
+  if (!body) return;
+
+  if (cartScreen === 'success') {
+    body.innerHTML = `
+      <div class="cart-success">
+        <h3>Замовлення прийнято</h3>
+        <p>Дякуємо! Ми зателефонуємо, щоб підтвердити доставку.</p>
+        <button class="add-btn btn-block" data-cart-action="close">На головну</button>
+      </div>`;
+    return;
+  }
+
+  const { items, count, sum } = cartTotals();
+
+  if (cartScreen === 'checkout') {
+    if (!items.length) {
+      cartScreen = 'list';
+    } else {
+      body.innerHTML = `
+        <form class="checkout" id="checkoutForm">
+          <label>Ім’я
+            <input name="name" type="text" required autocomplete="name" placeholder="Марія Коваль">
+          </label>
+          <label>Телефон
+            <input name="phone" type="tel" required autocomplete="tel" placeholder="+380 00 000 00 00">
+          </label>
+          <label>Місто та відділення
+            <textarea name="address" required placeholder="Київ, Нова Пошта №12"></textarea>
+          </label>
+          <div class="cart-summary__row">
+            <span>До сплати</span>
+            <b>${formatPrice(sum)}</b>
+          </div>
+          <div class="checkout__actions">
+            <button class="add-btn btn-block" type="submit">Підтвердити замовлення</button>
+            <button class="btn-ghost" type="button" data-cart-action="back">Назад до кошика</button>
+          </div>
+        </form>`;
+      return;
+    }
+  }
+
+  if (!items.length) {
+    body.innerHTML = `
+      <div class="cart-empty">
+        <p>Кошик поки порожній.</p>
+        <button class="add-btn" data-cart-action="close">До каталогу</button>
+      </div>`;
+    return;
+  }
+
+  body.innerHTML = `
+    <ul class="cart-list">
+      ${items.map(({ id, product: p, qty }) => `
+        <li class="cart-item">
+          <div class="cart-item__media">${productThumb(p)}</div>
+          <div class="cart-item__info">
+            <span class="cart-item__type">${p.type}</span>
+            <span class="cart-item__name">${p.name}</span>
+            <div class="cart-item__row">
+              <div class="qty">
+                <button type="button" data-qty="${id}" data-delta="-1" aria-label="Менше">−</button>
+                <span>${qty}</span>
+                <button type="button" data-qty="${id}" data-delta="1" aria-label="Більше">+</button>
+              </div>
+              <span class="cart-item__price">${formatPrice(p.price * qty)}</span>
+            </div>
+            <button class="cart-item__remove" type="button" data-remove="${id}">Прибрати</button>
+          </div>
+        </li>`).join('')}
+    </ul>
+    <div class="cart-summary">
+      <div class="cart-summary__row">
+        <span>${plural(count)}</span>
+        <b>${formatPrice(sum)}</b>
+      </div>
+      <button class="add-btn btn-block" data-cart-action="checkout">Оформити замовлення</button>
+    </div>`;
+}
+
+function openCart() {
+  cartScreen = 'list';
+  renderCart();
+  const overlay = $('cartOverlay');
+  const drawer = $('cartDrawer');
+  overlay.hidden = false;
+  drawer.hidden = false;
+  requestAnimationFrame(() => {
+    overlay.classList.add('is-open');
+    drawer.classList.add('is-open');
+  });
+  document.body.classList.add('cart-open');
+  $('cartClose').focus();
+}
+
+function closeCart() {
+  const overlay = $('cartOverlay');
+  const drawer = $('cartDrawer');
+  overlay.classList.remove('is-open');
+  drawer.classList.remove('is-open');
+  document.body.classList.remove('cart-open');
+  setTimeout(() => {
+    overlay.hidden = true;
+    drawer.hidden = true;
+    cartScreen = 'list';
+  }, 280);
+  $('cartBtn').focus();
+}
+
 $('grid').addEventListener('click', e => {
   const btn = e.target.closest('.add-btn');
   if (!btn) return;
@@ -138,14 +280,49 @@ $('grid').addEventListener('click', e => {
   showToast(`${p.type} ${p.name} — у кошику`);
 });
 
-$('cartBtn').addEventListener('click', () => {
-  const cart = loadCart();
-  const ids = Object.keys(cart);
-  if (!ids.length) return showToast('Кошик поки порожній');
-  const sum = ids.reduce((s, id) => s + PRODUCTS[id].price * cart[id], 0);
-  const count = Object.values(cart).reduce((a, b) => a + b, 0);
-  showToast(`У кошику ${plural(count)} на ${formatPrice(sum)}`);
+$('cartBtn').addEventListener('click', openCart);
+$('cartClose').addEventListener('click', closeCart);
+$('cartOverlay').addEventListener('click', closeCart);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.body.classList.contains('cart-open')) closeCart();
+});
+
+$('cartBody').addEventListener('click', e => {
+  const qtyBtn = e.target.closest('[data-qty]');
+  if (qtyBtn) {
+    const id = qtyBtn.dataset.qty;
+    const cart = loadCart();
+    setQty(id, (cart[id] || 0) + Number(qtyBtn.dataset.delta));
+    return;
+  }
+  const removeBtn = e.target.closest('[data-remove]');
+  if (removeBtn) {
+    setQty(removeBtn.dataset.remove, 0);
+    return;
+  }
+  const action = e.target.closest('[data-cart-action]');
+  if (!action) return;
+  if (action.dataset.cartAction === 'close') closeCart();
+  if (action.dataset.cartAction === 'checkout') {
+    cartScreen = 'checkout';
+    renderCart();
+  }
+  if (action.dataset.cartAction === 'back') {
+    cartScreen = 'list';
+    renderCart();
+  }
+});
+
+$('cartBody').addEventListener('submit', e => {
+  if (e.target.id !== 'checkoutForm') return;
+  e.preventDefault();
+  saveCart({});
+  updateCartCount();
+  cartScreen = 'success';
+  renderCart();
 });
 
 renderCards();
 updateCartCount();
+
